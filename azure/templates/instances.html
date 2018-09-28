@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block base %}
+<table class="table table-striped table-dark">
+  <thead>
+    <tr>
+      <th>name</th>
+        <th>resource</th>
+        <th>vmSize</th>
+      <th>location</th>
+      <th>time</th>
+      <th>code</th>
+      <th>displayStatus</th>
+
+    </tr>
+  </thead>
+  <tbody>
+{% for vm in vms %}
+
+    <tr>
+    <td >{{vm.name}}</td>
+        <td >{{vm.resource}}</td>
+        <td >{{vm.vmSize}}</td>
+        <td >{{vm.location}}</td>
+        <td >{{vm.time}}</td>
+        <td >{{vm.code}}</td>
+        <td >{{vm.displayStatus}}</td>
+  </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<center>
+Deallocated / Total VMS <br>
+{{ statistic.vmsdealoc }} / {{ statistic.vmstotal }}
+{% endblock %}

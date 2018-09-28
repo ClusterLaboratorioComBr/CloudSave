@@ -25,7 +25,7 @@ SECRET_KEY = '4moq4^k($k_xiad6b(w5#()f6+9f_%900bma%el+0=4t=uw7t9'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -37,8 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cloudsave.apps.CloudsaveConfig',
-    'azure',
+    # 'cloudsave.apps.CloudsaveConfig',
+    'azure.apps.AzureConfig',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [

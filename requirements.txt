@@ -1,0 +1,6 @@
+django
+azurerm
+pymongo
+azure
+djangorestframework
+httpie
