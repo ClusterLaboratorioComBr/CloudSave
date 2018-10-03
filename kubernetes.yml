@@ -1,0 +1,77 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cloudsave
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudsave
+  template:
+    metadata:
+      labels:
+        app: cloudsave
+    spec:
+      containers:
+        - name: cloudsave
+          image: clusterlab/cloudsave:latest
+          env:
+            - name: MONGOSERVER
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsave
+                  key: mongoserver            
+            - name: MONGODB
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsave
+                  key: mongodb                  
+            - name: AZ_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsave
+                  key: azname
+            - name: AZ_APPID
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsave
+                  key: azappid            
+            - name: AZ_DISPLAYNAME
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsave
+                  key: azdisplayname
+            - name: AZ_PASSWD
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsave
+                  key: azpasswd
+            - name: AZ_TENANT
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsave
+                  key: aztenant
+            - name: AZ_SUBSCRIPTION
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsave
+                  key: azsubscription
+          ports:
+          - name: http
+            containerPort: 8000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloudsave 
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetport: 8000
+  selector:
+    app: cloudsave              
