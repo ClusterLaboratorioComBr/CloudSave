@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: cloudsave
-          image: $(Build.Repository.Name):$(Build.BuildId)
+          image: __Build.Repository.Name__
           env:
             - name: MONGOSERVER
               valueFrom:
