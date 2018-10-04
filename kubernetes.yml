@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: cloudsave
-          image: clusterlab/cloudsave:latest
+          image: $(Build.Repository.Name):$(Build.BuildId)
           env:
             - name: MONGOSERVER
               valueFrom:
