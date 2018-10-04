@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: cloudsave
-          image: __REPONAME__/__IMAGENAME__:__TAGNAME__
+          image: $REPONAME
           env:
             - name: MONGOSERVER
               valueFrom:
