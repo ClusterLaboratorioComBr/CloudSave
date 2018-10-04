@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: cloudsave
-          image: __REPONAME__
+          image: __Parameters.azureContainerRegistry__/__system.teamProject__:__Build.BuildId__
           env:
             - name: MONGOSERVER
               valueFrom:
