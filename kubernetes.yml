@@ -25,12 +25,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: cloudsave
-                  key: mongoserver            
+                  key: mongoserver
             - name: MONGODB
               valueFrom:
                 secretKeyRef:
                   name: cloudsave
-                  key: mongodb                  
+                  key: mongodb
             - name: AZ_NAME
               valueFrom:
                 secretKeyRef:
@@ -40,7 +40,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: cloudsave
-                  key: azappid            
+                  key: azappid
             - name: AZ_DISPLAYNAME
               valueFrom:
                 secretKeyRef:
@@ -78,4 +78,4 @@ spec:
     port: 80
     targetPort: 8000
   selector:
-    app: cloudsave              
+    app: cloudsave
