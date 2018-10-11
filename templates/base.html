@@ -37,7 +37,7 @@
 {#      </li>#}
 {#        {% endfor %}#}
         <li class="nav-item active">
-          <a class="nav-link" href="{% url 'azure:home' %}">Azure</a>
+          <a class="nav-link" href="{% url 'base:home' %}">Azure</a>
       </li>
         <li class="nav-item active">
           <a class="nav-link" href="{% url 'azure:vms' %}">Virtual Machines</a>
@@ -50,6 +50,10 @@
       </li>
         <li class="nav-item active">
           <a class="nav-link" href="{% url 'azure:collect' %}">collect</a>
+      </li>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'azure:tags' %}">TAGS</a>
       </li>
 
       <li class="nav-item dropdown">

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from pymongo import MongoClient
 from src.azure import Azclass as az
-import threading, time, os
+import threading, time, os, datetime
 title = "Azuremon"
 az_appid = os.environ['AZ_APPID']
 az_dn = os.environ['AZ_DISPLAYNAME']
@@ -18,10 +18,10 @@ menu = {
     "disks": "Disks",
     "blob":  "Blob",
     "collect": "Collect data"}
-
+now = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
 def index(request):
-    return render(request, 'index.html', {"active":"home","menu": menu,'title':title})
+    return render(request, 'index.html', {"active":"home","menu": menu,'title':title, 'data':now})
 def getDeallocatedInstances(request):
     mongocollection = "vms"
     client = MongoClient(mongoserver)
@@ -57,3 +57,5 @@ def collectVmsFromAzureThread():
             print("Fail to write data to database.")
         else:
             print(LOG_id)
+def getTags(request):
+    return render(request, 'azure_tags.html',{})

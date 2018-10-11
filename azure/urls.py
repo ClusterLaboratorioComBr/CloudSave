@@ -9,5 +9,6 @@ urlpatterns = [
     path("vms/", views.getDeallocatedInstances,name='vms'),
     path("disks/", views.index,name='disks'),
     path("blob/", views.index,name='blob'),
-    path("collect/", views.collectVmsFromAzure,name='collect')
+    path("collect/", views.collectVmsFromAzure,name='collect'),
+    path("tags/",views.getTags, name='tags')
 ]
