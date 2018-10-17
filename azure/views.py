@@ -58,4 +58,9 @@ def collectVmsFromAzureThread():
         else:
             print(LOG_id)
 def getTags(request):
+    nuvem = az(az_appid, az_dn, az_name,az_passwd,az_tenant,az_subscription)
+    nuvem.getVmsList()
     return render(request, 'azure_tags.html',{})
+def vms2(request):
+
+    return render(request,'azure_vms2.html',{})
