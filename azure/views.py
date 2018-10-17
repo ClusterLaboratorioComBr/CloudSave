@@ -2,6 +2,7 @@ from django.shortcuts import render
 from pymongo import MongoClient
 from src.azure import Azclass as az
 import threading, time, os, datetime
+from src.azuresdk import AzureSdk as azsdk
 title = "Azuremon"
 az_appid = os.environ['AZ_APPID']
 az_dn = os.environ['AZ_DISPLAYNAME']
@@ -33,7 +34,7 @@ def getDeallocatedInstances(request):
     return  render(request, 'instances.html',{"active":"vms","menu": menu,'title':title, 'vms':vms,"statistic":{"vmsdealoc":vmsdealoc, "vmstotal":vmstotal}})
 def collectVmsFromAzure(request):
     # print("thread")
-    t = threading.Thread(target=collectVmsFromAzureThread)
+    t = threading.Thread(target=collectVmsFromAzureThread2)
     t.start()
     # while t.is_alive():
     #     print("Thread rodando")
@@ -57,10 +58,38 @@ def collectVmsFromAzureThread():
             print("Fail to write data to database.")
         else:
             print(LOG_id)
+def collectVmsFromAzureThread2():
+    print("thread Start")
+    # nuvem = az(az_appid, az_dn, az_name, az_passwd, az_tenant, az_subscription)
+    azure = azsdk(az_appid,az_dn,az_name,az_passwd,az_tenant,az_subscription)
+    client = MongoClient(mongoserver)
+    db = client[mongodb]
+    collection = db['vms']
+    print("Drop collection vms in " + mongodb + " database")
+    vmlist = azure.getAllVms()
+    print(vmlist)
+    return False
+    # collection.drop()
+    # retorno = nuvem.getVmsList()
+    # for data in retorno:
+    #     try:
+    #         print("Collecting vms in " + mongodb + " database")
+    #         LOG_id = collection.insert_one(data)
+    #     except ValueError:
+    #         print("Fail to write data to database.")
+    #     else:
+    #         print(LOG_id)
 def getTags(request):
     nuvem = az(az_appid, az_dn, az_name,az_passwd,az_tenant,az_subscription)
     nuvem.getVmsList()
     return render(request, 'azure_tags.html',{})
 def vms2(request):
-
-    return render(request,'azure_vms2.html',{})
+    mongocollection = "vms"
+    client = MongoClient(mongoserver)
+    db = client[mongodb]
+    collection = db[mongocollection]
+    vms = collection.find({ "displayStatus": {"$ne": "VM running"}})
+    vmsdealoc = vms.count()
+    vmstotal = collection.find().count()
+    return  render(request, 'instances.html',{"active":"vms","menu": menu,'title':title, 'vms':vms,"statistic":{"vmsdealoc":vmsdealoc, "vmstotal":vmstotal}})
+    # return render(request,'azure_vms2.html',{})
