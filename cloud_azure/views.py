@@ -66,7 +66,7 @@ def collectVmsFromAzureThread2():
     collection = db['vms']
     print("Drop collection vms in " + mongodb + " database")
     # collection.drop()
-    # data=azure.getVmDetail("az-dev-wis-w","RG-HOMOLOG",now)
+    # data=azure.getVmDetail("vmname","rgname",now)
     #
     # return False
     vmlist = azure.getAllVms()
