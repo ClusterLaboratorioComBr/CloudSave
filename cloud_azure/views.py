@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from pymongo import MongoClient
-from src.azure import Azclass as az
+# from src.azure import Azclass as az
+from src.azuresdk import Azclass as az
 import threading, time, os, datetime
 from src.azuresdk import AzureSdk as azsdk
 title = "Azuremon"
@@ -42,7 +43,6 @@ def collectVmsFromAzure(request):
     return render(request, 'index.html', {"active": "collect", "menu": menu, 'title': title})
 def collectVmsFromAzureThread():
     print("thread Start")
-
     nuvem = az(az_appid, az_dn, az_name, az_passwd, az_tenant, az_subscription)
     client = MongoClient(mongoserver)
     db = client[mongodb]
@@ -60,25 +60,28 @@ def collectVmsFromAzureThread():
             print(LOG_id)
 def collectVmsFromAzureThread2():
     print("thread Start")
-    # nuvem = az(az_appid, az_dn, az_name, az_passwd, az_tenant, az_subscription)
     azure = azsdk(az_appid,az_dn,az_name,az_passwd,az_tenant,az_subscription)
     client = MongoClient(mongoserver)
     db = client[mongodb]
     collection = db['vms']
     print("Drop collection vms in " + mongodb + " database")
-    vmlist = azure.getAllVms()
-    print(vmlist)
-    return False
     # collection.drop()
-    # retorno = nuvem.getVmsList()
-    # for data in retorno:
-    #     try:
-    #         print("Collecting vms in " + mongodb + " database")
-    #         LOG_id = collection.insert_one(data)
-    #     except ValueError:
-    #         print("Fail to write data to database.")
-    #     else:
-    #         print(LOG_id)
+    # data=azure.getVmDetail("az-dev-wis-w","RG-HOMOLOG",now)
+    #
+    # return False
+    vmlist = azure.getAllVms()
+    for vm in vmlist:
+        data = azure.getVmDetail(vm['vmname'], vm['rgname'],now)
+        if data is not False:
+            try:
+                print("Pushing VMS to " + mongodb + " database")
+                LOG_id = collection.insert_one(data)
+            except ValueError:
+                print("Fail to write data to database.")
+            else:
+                print(LOG_id)
+    return False
+
 def getTags(request):
     nuvem = az(az_appid, az_dn, az_name,az_passwd,az_tenant,az_subscription)
     nuvem.getVmsList()

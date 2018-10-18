@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 'cloudsave.apps.CloudsaveConfig',
-    'azure.apps.AzureConfig',
+    # 'azure.apps.AzureConfig',
+    'cloud_azure.apps.CloudAzureConfig',
     'base.apps.BaseConfig',
     'rest_framework'
 ]
