@@ -64,6 +64,7 @@ class CloudSave:
                     print("Fail to write data to database.")
                 else:
                     print(LOG_id)
+        # print(self.now)
         return False
 
     def collectVmsFromAzure(self):
@@ -79,3 +80,4 @@ class CloudSave:
 if args.cron == True:
     cloud = CloudSave()
     cloud.collectVmsFromAzure()
+    print(cloud.now)

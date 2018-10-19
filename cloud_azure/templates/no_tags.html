@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block base %}
+{{ now }} <br>
+    <table style="width:100%">
+  <tr>
+    <th>RGNAME</th>
+    <th>VMNAME</th>
+    <th>TAGS</th>
+  </tr>
+{% for item in data %}
+    <tr>
+    <th>{{ item.rgname }}</th>
+    <th>{{ item.vmname }}</th>
+        {% for tag in tags %}
+            {{ tag }}
+            {% endfor %}
+    <th>{{ item.tags }}</th>
+  </tr>
+    {% endfor %}
+    </table>
+    <center>Sem TAG / Total <br>
+        {{ COUNT }}/{{ TOTAL }}</center>
+{% endblock %}

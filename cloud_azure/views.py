@@ -24,7 +24,27 @@ now = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
 def index(request):
     return render(request, 'index.html', {"active":"home","menu": menu,'title':title, 'data':now})
+def tags(request):
+    mongocollection = "vms"
+    client = MongoClient(mongoserver)
+    db = client[mongodb]
+    collection = db[mongocollection]
+    try:
+        col_datetime = max(collection.find().distinct("datetime"))
+        # col_datetime = collection.distinct("datetime")
+        vms = collection.find({"datetime":col_datetime})
+        # vms = collection.find({"datetime":col_datetime,"tags":{"$eq":None}})
+        # vms = collection.find({"datetime":col_datetime,"tags":{"$eq":None}})
+    except ValueError as err:
+        print(err)
+    array = []
+    for vm in vms:
+        if "billing" not in vm["tags"]:
+            # print(vm["tags"])
+            array.append(vm)
+    # print(len(array))
 
+    return render(request,'no_tags.html',{"data":array,"now":now, "COUNT":len(array), "TOTAL":vms.count()})
 
 
 
@@ -46,11 +66,11 @@ def getDeallocatedInstances(request):
     vmsdealoc = vms.count()
     vmstotal = collection.find().count()
     return  render(request, 'instances.html',{"active":"vms","menu": menu,'title':title, 'vms':vms,"statistic":{"vmsdealoc":vmsdealoc, "vmstotal":vmstotal}})
-
-def getTags(request):
-    nuvem = az(az_appid, az_dn, az_name,az_passwd,az_tenant,az_subscription)
-    nuvem.getVmsList()
-    return render(request, 'azure_tags.html',{})
+#
+# def getTags(request):
+#     nuvem = az(az_appid, az_dn, az_name,az_passwd,az_tenant,az_subscription)
+#     nuvem.getVmsList()
+#     return render(request, 'azure_tags.html',{})
 def vms2(request):
     mongocollection = "vms"
     client = MongoClient(mongoserver)

@@ -139,7 +139,10 @@ class AzureSdk:
                 },
                 "data": datadisks
             }
-        tags = vm.tags
+        if vm.tags is not None:
+            tags = vm.tags
+        else:
+            tags = ""
         data = {
             "vmname":vmname,
             "rgname":rgname,

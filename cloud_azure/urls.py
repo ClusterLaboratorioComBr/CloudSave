@@ -11,5 +11,6 @@ urlpatterns = [
     path("disks/", views.index,name='disks'),
     path("blob/", views.index,name='blob'),
     # path("collect/", views.collectVmsFromAzure,name='collect'),
-    path("tags/",views.getTags, name='tags')
+    path("vm/tags/",views.tags,name='tags'),
+    # path("tags/",views.getTags, name='tags')
 ]
