@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block base %}
-{{ now }} <br>
+{{ now }}
+    <br>
+    <h1>Servidores sem TAG "Billing".</h1><br>
+        <center>Sem TAG / Total <br>
+        {{ COUNT }} / {{ TOTAL }}</center> <br>
+
     <table style="width:100%">
   <tr>
     <th>RGNAME</th>
@@ -18,6 +23,5 @@
   </tr>
     {% endfor %}
     </table>
-    <center>Sem TAG / Total <br>
-        {{ COUNT }}/{{ TOTAL }}</center>
+
 {% endblock %}
