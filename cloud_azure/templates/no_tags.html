@@ -3,12 +3,12 @@
     <br>
 
     <center>
-        <h3>Servidores sem TAG "Billing".</h3><br>
-        Sem TAG / Total <br>
+        <h3>Servers without the "Billing" TAG.</h3><br>
+        Results / Total <br>
         {{ COUNT }} / {{ TOTAL }} <br>
-        {{ WHEM }}
+        Query from : {{ WHEM }}
     </center> <br>
-    <table class="table table-hover">
+    <table class="table table-hover" style="font-size: small">
         <thead class="thead-dark">
         <tr>
             <th>RGNAME</th>
@@ -18,7 +18,7 @@
         </thead>
         {% for item in data %}
             <tr>
-                <th>{{ item.rgname }}</th>
+                <th style="width: 16.66%">{{ item.rgname }}</th>
                 <th>{{ item.vmname }}</th>
                 {% for tag in tags %}
                     {{ tag }}

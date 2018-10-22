@@ -22,14 +22,14 @@ menu = {
     "blob": "Blob",
     "collect": "Collect data"}
 now = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-
+now_human = datetime.datetime.strptime(now, "%Y%m%d%H%M%S")
 
 def index(request):
     return render(request, 'index.html', {"active": "home", "menu": menu, 'title': title, 'data': now})
 
 
 def azure(request):
-    return render(request, 'azure.html', {"active": "home", "menu": menu, 'title': title, 'data': now})
+    return render(request, 'azure.html', {"active": "home", "menu": menu, 'title': title, 'date': now, "datehuman":now_human})
 
 
 def tags(request):
@@ -51,9 +51,9 @@ def tags(request):
             # print(vm["tags"])
             array.append(vm)
     # print(len(array))
-
+    col_datetime_human = datetime.datetime.strptime(now, "%Y%m%d%H%M%S")
     return render(request, 'no_tags.html',
-                  {"data": array, "now": now, "COUNT": len(array), "TOTAL": vms.count(), "WHEM": col_datetime,'title': title})
+                  {"data": array, "now": now, "COUNT": len(array), "TOTAL": vms.count(), "WHEM": col_datetime_human,'title': title})
 
 
 def getDeallocatedInstances(request):
