@@ -4,6 +4,7 @@ from pymongo import MongoClient
 from src.azuresdk import Azclass as az
 import threading, time, os, datetime
 from src.azuresdk import AzureSdk as azsdk
+
 title = "Azuremon"
 az_appid = os.environ['AZ_APPID']
 az_dn = os.environ['AZ_DISPLAYNAME']
@@ -18,14 +19,19 @@ menu = {
     "home": "HOME",
     "vms": "Virtual Machines",
     "disks": "Disks",
-    "blob":  "Blob",
+    "blob": "Blob",
     "collect": "Collect data"}
 now = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
+
 def index(request):
-    return render(request, 'index.html', {"active":"home","menu": menu,'title':title, 'data':now})
+    return render(request, 'index.html', {"active": "home", "menu": menu, 'title': title, 'data': now})
+
+
 def azure(request):
-    return  render(request, 'azure.html',{"active":"home","menu": menu,'title':title, 'data':now})
+    return render(request, 'azure.html', {"active": "home", "menu": menu, 'title': title, 'data': now})
+
+
 def tags(request):
     mongocollection = "vms"
     client = MongoClient(mongoserver)
@@ -34,7 +40,7 @@ def tags(request):
     try:
         col_datetime = max(collection.find().distinct("datetime"))
         # col_datetime = collection.distinct("datetime")
-        vms = collection.find({"datetime":col_datetime})
+        vms = collection.find({"datetime": col_datetime})
         # vms = collection.find({"datetime":col_datetime,"tags":{"$eq":None}})
         # vms = collection.find({"datetime":col_datetime,"tags":{"$eq":None}})
     except ValueError as err:
@@ -46,17 +52,8 @@ def tags(request):
             array.append(vm)
     # print(len(array))
 
-    return render(request,'no_tags.html',{"data":array,"now":now, "COUNT":len(array), "TOTAL":vms.count()})
-
-
-
-
-
-
-
-
-
-
+    return render(request, 'no_tags.html',
+                  {"data": array, "now": now, "COUNT": len(array), "TOTAL": vms.count(), "WHEM": col_datetime,'title': title})
 
 
 def getDeallocatedInstances(request):
@@ -64,10 +61,13 @@ def getDeallocatedInstances(request):
     client = MongoClient(mongoserver)
     db = client[mongodb]
     collection = db[mongocollection]
-    vms = collection.find({ "displayStatus": {"$ne": "VM running"}})
+    vms = collection.find({"displayStatus": {"$ne": "VM running"}})
     vmsdealoc = vms.count()
     vmstotal = collection.find().count()
-    return  render(request, 'instances.html',{"active":"vms","menu": menu,'title':title, 'vms':vms,"statistic":{"vmsdealoc":vmsdealoc, "vmstotal":vmstotal}})
+    return render(request, 'instances.html', {"active": "vms", "menu": menu, 'title': title, 'vms': vms,
+                                              "statistic": {"vmsdealoc": vmsdealoc, "vmstotal": vmstotal}})
+
+
 #
 # def getTags(request):
 #     nuvem = az(az_appid, az_dn, az_name,az_passwd,az_tenant,az_subscription)
@@ -78,8 +78,9 @@ def vms2(request):
     client = MongoClient(mongoserver)
     db = client[mongodb]
     collection = db[mongocollection]
-    vms = collection.find({ "displayStatus": {"$ne": "VM running"}})
+    vms = collection.find({"displayStatus": {"$ne": "VM running"}})
     vmsdealoc = vms.count()
     vmstotal = collection.find().count()
-    return  render(request, 'instances.html',{"active":"vms","menu": menu,'title':title, 'vms':vms,"statistic":{"vmsdealoc":vmsdealoc, "vmstotal":vmstotal}})
+    return render(request, 'instances.html', {"active": "vms", "menu": menu, 'title': title, 'vms': vms,
+                                              "statistic": {"vmsdealoc": vmsdealoc, "vmstotal": vmstotal}})
     # return render(request,'azure_vms2.html',{})

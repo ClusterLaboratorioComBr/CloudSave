@@ -1,89 +1,95 @@
 {% load static %}
-
-
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
-  <title>{{title}}</title>
-  <!--<link rel="stylesheet" href="{% static 'css/menu.css' %}">-->
+    <title>{{ title }}</title>
+    <!--<link rel="stylesheet" href="{% static 'css/menu.css' %}">-->
 </head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
 <meta name="mobile-web-app-capable" content="yes">
 <meta charset="UTF-8">
 <body>
+{#base.html#}
 <br>
 
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/limenu.cssbs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/limenu.cssbs/popper.js/1.14.0/umd/popper.min.js"
+        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+      integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+        integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">{{title}}</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNavDropdown">
-    <ul class="navbar-nav">
+    <a class="navbar-brand" href="{% url 'base:home' %}">{{ title }}</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
 
 
-{#        {% for key, value in menu.items %}#}
-{#      <li class="nav-item active">#}
-{#          {% if key == active %}#}
-{#          <a class="nav-link" href="/{{ key }}/">{{value}} <span class="sr-only">(current)</span></a>#}
-{#          {% else %}#}
-{#          <a class="nav-link" href="/{{ key }}/">{{value}}</a>#}
-{#          {% endif %}#}
-{#      </li>#}
-{#        {% endfor %}#}
-        <li class="nav-item active">
-          <a class="nav-link" href="{% url 'base:home' %}">Home</a>
-      </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="{% url 'azure:azure' %}">Azure</a>
-      </li>
-{#        <li class="nav-item active">#}
-{#          <a class="nav-link" href="{% url 'azure:vms' %}">Virtual Machines</a>#}
-{#      </li>#}
-{#        <li class="nav-item active">#}
-{#          <a class="nav-link" href="{% url 'azure:vms2' %}">Virtual Machines2</a>#}
-{#      </li>#}
-        <li class="nav-item active">
-          <a class="nav-link" href="{% url 'base:home' %}">AWS</a>
-      </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="{% url 'base:home' %}">GPC</a>
-      </li>
-{#        <li class="nav-item active">#}
-{#          <a class="nav-link" href="{% url 'azure:collect' %}">collect</a>#}
-{#      </li>#}
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="{% url 'base:home' %}">ActionPoint</a>
-      </li>
+            {#        {% for key, value in menu.items %}#}
+            {#      <li class="nav-item active">#}
+            {#          {% if key == active %}#}
+            {#          <a class="nav-link" href="/{{ key }}/">{{value}} <span class="sr-only">(current)</span></a>#}
+            {#          {% else %}#}
+            {#          <a class="nav-link" href="/{{ key }}/">{{value}}</a>#}
+            {#          {% endif %}#}
+            {#      </li>#}
+            {#        {% endfor %}#}
+{#            <li class="nav-item active">#}
+{#                <a class="nav-link" href="{% url 'base:home' %}">Home</a>#}
+{#            </li>#}
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'azure:azure' %}">Azure</a>
+            </li>
+            {#        <li class="nav-item active">#}
+            {#          <a class="nav-link" href="{% url 'azure:vms' %}">Virtual Machines</a>#}
+            {#      </li>#}
+            {#        <li class="nav-item active">#}
+            {#          <a class="nav-link" href="{% url 'azure:vms2' %}">Virtual Machines2</a>#}
+            {#      </li>#}
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'base:home' %}">AWS</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'base:home' %}">GPC</a>
+            </li>
+            {#        <li class="nav-item active">#}
+            {#          <a class="nav-link" href="{% url 'azure:collect' %}">collect</a>#}
+            {#      </li>#}
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'base:home' %}">ActionPoint</a>
+            </li>
 
-{#      <li class="nav-item dropdown">#}
-{#        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
-{#          Dropdown link#}
-{#        </a>#}
-{#        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">#}
-{#          <a class="dropdown-item" href="#">Action</a>#}
-{#          <a class="dropdown-item" href="#">Another action</a>#}
-{#          <a class="dropdown-item" href="#">Something else here</a>#}
-{#        </div>#}
-{#      </li>#}
-    </ul>
-  </div>
+            {#      <li class="nav-item dropdown">#}
+            {#        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
+            {#          Dropdown link#}
+            {#        </a>#}
+            {#        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">#}
+            {#          <a class="dropdown-item" href="#">Action</a>#}
+            {#          <a class="dropdown-item" href="#">Another action</a>#}
+            {#          <a class="dropdown-item" href="#">Something else here</a>#}
+            {#        </div>#}
+            {#      </li>#}
+        </ul>
+    </div>
 </nav>
-
-<!--<img src="/static/images/terry-crews.jpg" height="120" width="320" >-->
-<!--<img src="/static/images/terry-crews.jpg" height="120" width="320" >-->
-    {% autoescape off %}
-        {% block menu %}
-        {% endblock %}
-        {% block base %}
-        {% endblock %}
-    {% endautoescape %}
+{% autoescape off %}
+    {% block menu %}
+    {% endblock %}
+    {% block base %}
+    {% endblock %}
+    {% block azure %}
+    {% endblock %}
+{% endautoescape %}
 
 </body>
 </html>
