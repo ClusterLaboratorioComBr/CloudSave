@@ -14,5 +14,7 @@ urlpatterns = [
     path("blob/", views.index, name='blob'),
     # path("collect/", views.collectVmsFromAzure,name='collect'),
     path("vm/tags/", views.tags, name='tags'),
+    path("vm/tags/<str:timefilter>", views.tags, name='tags'),
     # path("tags/",views.getTags, name='tags')
+    path("vm/deallocated", views.deallocated, name='deallocated'),
 ]

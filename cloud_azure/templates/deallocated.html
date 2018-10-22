@@ -1,0 +1,15 @@
+{% extends "azure.html" %}
+{% block azure %}
+    <div class="col">
+        <div >
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    {% for date in DATEARRAY %}
+                        <li class="page-item"><a class="page-link" href="{{ date.2 }}" data-toggle="tooltip"
+                                                 data-placement="top" title="{{ date.0 }}">{{ date.1 }}</a></li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+{% endblock %}
