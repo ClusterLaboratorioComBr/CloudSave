@@ -51,7 +51,7 @@ def tags(request):
             # print(vm["tags"])
             array.append(vm)
     # print(len(array))
-    col_datetime_human = datetime.datetime.strptime(now, "%Y%m%d%H%M%S")
+    col_datetime_human = datetime.datetime.strptime(col_datetime, "%Y%m%d%H%M%S")
     return render(request, 'no_tags.html',
                   {"data": array, "now": now, "COUNT": len(array), "TOTAL": vms.count(), "WHEM": col_datetime_human,'title': title})
 
