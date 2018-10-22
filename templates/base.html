@@ -37,7 +37,10 @@
 {#      </li>#}
 {#        {% endfor %}#}
         <li class="nav-item active">
-          <a class="nav-link" href="{% url 'base:home' %}">Azure</a>
+          <a class="nav-link" href="{% url 'base:home' %}">Home</a>
+      </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'azure:azure' %}">Azure</a>
       </li>
 {#        <li class="nav-item active">#}
 {#          <a class="nav-link" href="{% url 'azure:vms' %}">Virtual Machines</a>#}
@@ -46,29 +49,29 @@
 {#          <a class="nav-link" href="{% url 'azure:vms2' %}">Virtual Machines2</a>#}
 {#      </li>#}
         <li class="nav-item active">
-          <a class="nav-link" href="{% url 'azure:disks' %}">Disks</a>
+          <a class="nav-link" href="{% url 'base:home' %}">AWS</a>
       </li>
         <li class="nav-item active">
-          <a class="nav-link" href="{% url 'azure:blob' %}">BLOB</a>
+          <a class="nav-link" href="{% url 'base:home' %}">GPC</a>
       </li>
 {#        <li class="nav-item active">#}
 {#          <a class="nav-link" href="{% url 'azure:collect' %}">collect</a>#}
 {#      </li>#}
         </li>
         <li class="nav-item active">
-          <a class="nav-link" href="{% url 'azure:tags' %}">TAGS</a>
+          <a class="nav-link" href="{% url 'base:home' %}">ActionPoint</a>
       </li>
 
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown link
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
+{#      <li class="nav-item dropdown">#}
+{#        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
+{#          Dropdown link#}
+{#        </a>#}
+{#        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">#}
+{#          <a class="dropdown-item" href="#">Action</a>#}
+{#          <a class="dropdown-item" href="#">Another action</a>#}
+{#          <a class="dropdown-item" href="#">Something else here</a>#}
+{#        </div>#}
+{#      </li>#}
     </ul>
   </div>
 </nav>

@@ -24,6 +24,8 @@ now = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
 def index(request):
     return render(request, 'index.html', {"active":"home","menu": menu,'title':title, 'data':now})
+def azure(request):
+    return  render(request, 'azure.html',{"active":"home","menu": menu,'title':title, 'data':now})
 def tags(request):
     mongocollection = "vms"
     client = MongoClient(mongoserver)
