@@ -34,7 +34,7 @@ def azure(request):
                   {"active": "home", "menu": menu, 'title': title, 'date': now, "datehuman": now_human})
 
 
-def tags(request,timefilter="last"):
+def tags(request, timefilter="last"):
     mongocollection = "vms"
     client = MongoClient(mongoserver)
     db = client[mongodb]
@@ -76,7 +76,7 @@ def tags(request,timefilter="last"):
     # print(len(array))
     return render(request, 'no_tags.html',
                   {"data": array, "now": now, "COUNT": len(array), "TOTAL": vms.count(), "WHEM": col_datetime_human,
-                   'title': title,"DATEARRAY": datearray})
+                   'title': title, "DATEARRAY": datearray})
 
 
 def deallocated(request):
