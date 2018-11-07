@@ -1,0 +1,23 @@
+{% extends "azure.html" %}
+{% block azure %}
+    <table class="table table-hover" style="font-size: small">
+        <thead class="thead-dark">
+        <tr>
+            <th>Vault Resource Group</th>
+            <th>vault Name</th>
+            <th>protectionContainers</th>
+            <th>protectedItems</th>
+            <th>subscription</th>
+        </tr>
+        </thead>
+        {% for item in protecteds %}
+            <tr>
+                <th style="width: 16.66%">{{ item.rg }}</th>
+                <th>{{ item.vault }}</th>
+                <th>{{ item.protectionContainers }}</th>
+                <th>{{ item.protectedItems }}</th>
+                <th>{{ item.subscription }}</th>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

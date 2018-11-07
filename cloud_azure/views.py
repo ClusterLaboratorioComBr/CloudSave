@@ -23,7 +23,8 @@ menu = {
     "collect": "Collect data"}
 now = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 now_human = datetime.datetime.strptime(now, "%Y%m%d%H%M%S")
-
+cloud_azure = azsdk(az_appid,az_dn,az_name,az_passwd,az_tenant,az_subscription)
+# cloud_azure.login()
 
 def index(request):
     return render(request, 'index.html', {"active": "home", "menu": menu, 'title': title, 'data': now})
@@ -138,3 +139,8 @@ def vms2(request):
     return render(request, 'instances.html', {"active": "vms", "menu": menu, 'title': title, 'vms': vms,
                                               "statistic": {"vmsdealoc": vmsdealoc, "vmstotal": vmstotal}})
     # return render(request,'azure_vms2.html',{})
+
+
+def backup(request):
+    protecteds = cloud_azure.getBackupProtectedItems()
+    return render(request, 'backup.html', {'title': title, 'protecteds':protecteds})

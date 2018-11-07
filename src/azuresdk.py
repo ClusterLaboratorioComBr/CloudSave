@@ -230,7 +230,8 @@ class AzureSdk:
                     "protectionContainers": protected_protectionContainers,
                     "protectedItems": protected_protectedItems
                 })
-                print("console" + protected)
+                # print("console" + protected)
+                # print(protected)
         return backup_items
     #
     # def getComnputeUsage(self):

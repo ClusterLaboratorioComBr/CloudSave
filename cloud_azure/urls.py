@@ -17,4 +17,5 @@ urlpatterns = [
     path("vm/tags/<str:timefilter>", views.tags, name='tags'),
     # path("tags/",views.getTags, name='tags')
     path("vm/deallocated", views.deallocated, name='deallocated'),
+    path("backup", views.backup,name = 'backup'),
 ]

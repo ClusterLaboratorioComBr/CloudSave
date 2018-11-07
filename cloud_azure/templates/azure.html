@@ -21,12 +21,15 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="{% url 'azure:deallocated' %}">Deallocated VMS</a>
                 </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'azure:backup' %}">Backup(Protected Items)</a>
+                </li>
 
             </ul>
         </div>
     </nav>
-{#{{ date }} <br>#}
-{#    {{ datehuman }}#}
+    {#{{ date }} <br>#}
+    {#    {{ datehuman }}#}
 {% endblock %}
 {% block azure %}
 {% endblock %}
