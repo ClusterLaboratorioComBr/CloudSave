@@ -11,6 +11,8 @@ COPY requirements.txt /webapps/
 RUN pip install -r /webapps/requirements.txt
 ADD . /webapps/
 WORKDIR /webapps/
+# CRONTAB
+RUN cp -f /webapps/src/cron_* /etc/cron.d
 # Django service
 EXPOSE 8000
 RUN chmod +x run_web.sh
