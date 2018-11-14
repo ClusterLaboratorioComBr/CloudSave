@@ -1,2 +1,2 @@
-0 */4 * * * root /webapps/src/cloudsave.py --cron
+0 13 * * * root /webapps/src/cloudsave.py --cron
 * * * * * root date > /tmp/log
