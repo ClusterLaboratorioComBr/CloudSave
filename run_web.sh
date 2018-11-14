@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-cron
+#cron
+/etc/init.d/cron start
 cd /webapps/
 python manage.py migrate
 python manage.py collectstatic --noinput
