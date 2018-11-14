@@ -15,6 +15,5 @@ WORKDIR /webapps/
 RUN cp -f /webapps/src/cron_* /etc/cron.d
 # Django service
 EXPOSE 8000
-RUN cron
 RUN chmod +x run_web.sh
 CMD ./run_web.sh
