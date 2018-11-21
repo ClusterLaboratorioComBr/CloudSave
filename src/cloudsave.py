@@ -16,9 +16,14 @@ mongodb = os.environ['MONGODB']
 
 
 parser = argparse.ArgumentParser(description='CloudSave Maintenance Console')
-parser.add_argument('--cron', action='store_true', help='Update cron with data fro mthe cloud.')
+parser.add_argument('--cron', action='store_true', help='Run all the scheduled tasks which are daily.')
+parser.add_argument('--tags', action='store_true', help='Update the disk tags of a virtual machine with all the tags from the virtual machine')
 parser.parse_args([])
 args = parser.parse_args()
+
+
+
+# exit(1)
 
 class CloudSave:
     def __init__(self):
@@ -76,8 +81,20 @@ class CloudSave:
         #     time.sleep(5)
         # return render(request, 'index.html', {"active": "collect", "menu": menu, 'title': title})
         return False
-
-if args.cron == True:
-    cloud = CloudSave()
-    cloud.collectVmsFromAzure()
-    print(cloud.now)
+    def updateDisksTags(self):
+        print("dummy")
+if __name__ == '__main__':
+    class main:
+        cloud = CloudSave()
+        if args.tags is True and args.cron is True:
+            print("Tags and Cron cannot be used at the same time")
+            exit(1)
+        if args.cron is not None:
+            # print(args.cron)
+            if args.cron == True:
+                cloud.collectVmsFromAzure()
+                print(cloud.now)
+        if args.tags is not None:
+            # print(args.tags)
+            if args.tags == True:
+                cloud.updateDisksTags()
