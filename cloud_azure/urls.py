@@ -8,7 +8,8 @@ urlpatterns = [
     # path("", views.index, name='index'),
     path("home/", views.index, name='home'),
     path("azure/", views.azure, name='azure'),
-    path("vms/<str:timefilter>", views.getDeallocatedInstances,name='vms'),
+    path("vm/deallocated/<str:timefilter>", views.getDeallocatedInstances,name='deallocated'),
+    path("vm/deallocated/", views.getDeallocatedInstances,name='deallocated'),
     # path("vms2/", views.vms2,name='vms2'),
     path("disks/", views.index, name='disks'),
     path("blob/", views.index, name='blob'),
@@ -16,6 +17,6 @@ urlpatterns = [
     path("vm/tags/", views.tags, name='tags'),
     path("vm/tags/<str:timefilter>", views.tags, name='tags'),
     # path("tags/",views.getTags, name='tags')
-    path("vm/deallocated", views.deallocated, name='deallocated'),
+    # path("vm/deallocated", views.deallocated, name='deallocated'),
     path("backup/", views.backup,name = 'backup'),
 ]
