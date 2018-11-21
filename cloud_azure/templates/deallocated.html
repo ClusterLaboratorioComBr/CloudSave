@@ -1,7 +1,16 @@
 {% extends "azure.html" %}
 {% block azure %}
+    <br>
+
+    <center>
+        <h3>Deallocated Virtual Machines</h3><br>
+        Total <br>
+        {{ TOTAL }} <br>
+        Query from : {{ WHEM }}
+    </center> <br>
+    {#    {% if DATEARRAY == "False" %}#}
     <div class="col">
-        <div >
+        <div>
             <nav aria-label="Page navigation example">
                 <ul class="pagination">
                     {% for date in DATEARRAY %}
@@ -12,4 +21,30 @@
             </nav>
         </div>
     </div>
+    {#    {%  endif %}#}
+    <table class="table table-hover" style="font-size: small">
+        <thead class="thead-dark">
+        <tr>
+            <th>RGNAME</th>
+            <th>VMNAME</th>
+            <th>LOCATION</th>
+            <th>VM SIZE</th>
+            <th>IPADDRESS</th>
+            <th>DATETIME</th>
+        </tr>
+        </thead>
+        {% for vm in vms %}
+            <tr>
+            <th>{{ vm.vmname }}</th>
+            <th>{{ vm.rgname }}</th>
+                <th> {{ vm.location }}</th>
+                <th>{{ vm.size }}</th>
+                <th>{{ vm.network.ip }}</th>
+            <th>{{ vm.statetime }}</th>
+            </tr>
+        {% endfor %}
+    </table>
+{#    {% for vm in vms %}#}
+{#        {{ vm }} <br>#}
+{#    {% endfor %}#}
 {% endblock %}

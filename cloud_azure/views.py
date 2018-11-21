@@ -111,35 +111,86 @@ def deallocated(request):
                    "DATEARRAY": datearray})
 
 
-def getDeallocatedInstances(request):
+def getDeallocatedInstances(request, timefilter="last"):
+    # mongocollection = "vms"
+    # client = MongoClient(mongoserver)
+    # db = client[mongodb]
+    # collection = db[mongocollection]
+    # vms = collection.find({"state": {"$ne": "PowerState/running"}})
+    # for vm in vms:
+    #     print(vm)
+    # vmsdealoc = vms.count()
+    # print(vmsdealoc)
+    # vmstotal = collection.find().count()
+    # return render(request, 'deallocated.html', {"active": "vms", "menu": menu, 'title': title, 'vms': vms,
+    #                                           "statistic": {"vmsdealoc": vmsdealoc, "vmstotal": vmstotal}})
     mongocollection = "vms"
     client = MongoClient(mongoserver)
     db = client[mongodb]
     collection = db[mongocollection]
-    vms = collection.find({"displayStatus": {"$ne": "VM running"}})
-    vmsdealoc = vms.count()
-    vmstotal = collection.find().count()
-    return render(request, 'instances.html', {"active": "vms", "menu": menu, 'title': title, 'vms': vms,
-                                              "statistic": {"vmsdealoc": vmsdealoc, "vmstotal": vmstotal}})
+    try:
+        col_datetimes = collection.find().distinct("datetime")
+        datearray = []
+        datearraycounter = 1
+        for date in col_datetimes:
+            array = []
+            array.append(str(datetime.datetime.strptime(date, "%Y%m%d%H%M%S")))
+            array.append(datearraycounter)
+            array.append(date)
+            datearray.append(array)
+            datearraycounter = datearraycounter + 1
+            print(date)
+            print(str(datetime.datetime.strptime(date, "%Y%m%d%H%M%S")))
 
+        if timefilter == "last":
+            print("last")
+            vms = collection.find({"state": {"$ne": "PowerState/running"},"datetime": max(col_datetimes)})
+            # vms = collection.find({"datetime": max(col_datetimes)})
+            col_datetime_human = datetime.datetime.strptime(max(col_datetimes), "%Y%m%d%H%M%S")
+
+
+        else:
+            print(timefilter)
+            col_datetime_human = datetime.datetime.strptime(timefilter, "%Y%m%d%H%M%S")
+            vms = collection.find({"datetime": timefilter,"state": {"$ne": "PowerState/running"}})
+            # vms = collection.find({"datetime": timefilter})
+            # datearray = False
+        # col_datetime = collection.distinct("datetime")
+
+    except ValueError as err:
+        print(err)
+    # vmsdealoc = vms.count()
+    # array = []
+    # for vm in vms:
+    #     if "billing" not in vm["tags"]:
+    #         # print(vm["tags"])
+    #         array.append(vm)
+    # print(len(array))
+    print(vms)
+    return render(request, 'deallocated.html',
+                  { "now": now, "TOTAL": vms.count(), "WHEM": col_datetime_human,
+                   'title': title, "DATEARRAY": datearray, "vms":vms.sort("statetime")})
+    # return render(request, 'no_tags.html',
+    #               {"data": array, "now": now, "COUNT": len(array), "TOTAL": vms.count(), "WHEM": col_datetime_human,
+    #                'title': title, "DATEARRAY": datearray})
 
 #
 # def getTags(request):
 #     nuvem = az(az_appid, az_dn, az_name,az_passwd,az_tenant,az_subscription)
 #     nuvem.getVmsList()
 #     return render(request, 'azure_tags.html',{})
-def vms2(request):
-    mongocollection = "vms"
-    client = MongoClient(mongoserver)
-    db = client[mongodb]
-    collection = db[mongocollection]
-    vms = collection.find({"displayStatus": {"$ne": "VM running"}})
-    vmsdealoc = vms.count()
-    vmstotal = collection.find().count()
-    return render(request, 'instances.html', {"active": "vms", "menu": menu, 'title': title, 'vms': vms,
-                                              "statistic": {"vmsdealoc": vmsdealoc, "vmstotal": vmstotal}})
-    # return render(request,'azure_vms2.html',{})
-
+# def vms2(request):
+#     mongocollection = "vms"
+#     client = MongoClient(mongoserver)
+#     db = client[mongodb]
+#     collection = db[mongocollection]
+#     vms = collection.find({"displayStatus": {"$ne": "VM running"}})
+#     vmsdealoc = vms.count()
+#     vmstotal = collection.find().count()
+#     return render(request, 'instances.html', {"active": "vms", "menu": menu, 'title': title, 'vms': vms,
+#                                               "statistic": {"vmsdealoc": vmsdealoc, "vmstotal": vmstotal}})
+#     return render(request,'azure_vms2.html',{})
+#
 
 def backup(request):
     protecteds = cloud_azure.getBackupProtectedItems()
