@@ -2,7 +2,7 @@
 #  coding=utf-8
 import argparse, os, threading, datetime
 from argparse import Namespace
-
+import json
 from azuresdk import AzureSdk as azsdk
 from pymongo import MongoClient
 
@@ -28,36 +28,13 @@ args: parser = parser.parse_args()
 class CloudSave:
     def __init__(self):
         self.now = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-
-    # def collectVmsFromAzureThread(self):
-    #     print("thread Start")
-    #     nuvem = az(az_appid, az_dn, az_name, az_passwd, az_tenant, az_subscription)
-    #     client = MongoClient(mongoserver)
-    #     db = client[mongodb]
-    #     collection = db['vms']
-    #     print("Drop collection vms in " + mongodb + " database")
-    #     collection.drop()
-    #     retorno = nuvem.getVmsList()
-    #     for data in retorno:
-    #         try:
-    #             print("Collecting vms in " + mongodb + " database")
-    #             LOG_id = collection.insert_one(data)
-    #         except ValueError:
-    #             print("Fail to write data to database.")
-    #         else:
-    #             print(LOG_id)
-
     def collectVmsFromAzureThread(self):
         print("thread Start")
         azure = azsdk(az_appid, az_dn, az_name, az_passwd, az_tenant, az_subscription)
         client = MongoClient(mongoserver)
         db = client[mongodb]
         collection = db['vms']
-        # print("Drop collection vms in " + mongodb + " database")
         # collection.drop()
-        # data=azure.getVmDetail("vmname","rgname",now)
-        #
-        # return False
         vmlist = azure.getAllVms()
         for vm in vmlist:
             data = azure.getVmDetail(vm['vmname'], vm['rgname'], self.now)
@@ -69,69 +46,98 @@ class CloudSave:
                     print("Fail to write data to database.")
                 else:
                     print(LOG_id)
-        # print(self.now)
         return False
 
     def collectVmsFromAzure(self):
-        # print("thread")
         t = threading.Thread(target=self.collectVmsFromAzureThread)
         t.start()
-        # while t.is_alive():
-        #     print("Thread rodando")
-        #     time.sleep(5)
-        # return render(request, 'index.html', {"active": "collect", "menu": menu, 'title': title})
-        return False
-
-    @property
-    def updateDisksTags(self):
-        # TODO Implement the tag pusher to disk resources at azure
-        print("Update disk tags")
-        azure = azsdk(az_appid, az_dn, az_name, az_passwd, az_tenant, az_subscription)
-        client = MongoClient(mongoserver)
-        db = client[mongodb]
-        collection = db['vms']
-        # print("Drop collection vms in " + mongodb + " database")
-        # collection.drop()
-        MOC_VMNAME="temp-oracle"
-        MOC_RGNAME="az-sandbox"
-        # data=azure.getVmDetail(MOC_VMNAME,MOC_RGNAME,self.now)
-        # print(data)
-        # print(data['disk']['os']['tags'])
-        # for datadisk in data['disk']['data']:
-        #     print(datadisk['tags'])
-        # # print(data['disk']['data'])
-        # vmid = str(azure.getvmid(MOC_VMNAME,MOC_RGNAME))
-        # print(vmid)
-        print(azure.getresorucedetailbyid(azure.getvmid(MOC_VMNAME,MOC_RGNAME),"vm"))
-
-
-
-
-
-
-        #
-        # return False
-        # azure.getvmdetail3()
-        #
-        # return False
-        # vmlist = azure.getAllVms()
-
-        # for vm in vmlist:
-        #     data = azure.getVmDetail(vm['vmname'], vm['rgname'], self.now)
-        #     if data is not False:
-        #         try:
-        #             print(f"Pushing VMS to {mongodb} database")
-        #             # print(data)
-        #             # LOG_id = collection.insert_one(data)
-        #         except ValueError:
-        #             print("Fail to write data to database.")
-                # else:
-                #     print(LOG_id)
-            # break
-        # print(self.now)
         return False
 
 
+    def updateDisksTags(self, server, base, collection):
+        timefilter = "last"
+        client = MongoClient(server)
+        db = client[base]
+        collection = db[collection]
+        try:
+            col_datetimes = collection.find().distinct("datetime")
+            datearray = []
+            datearraycounter = 1
+            for date in col_datetimes:
+                array = []
+                array.append(str(datetime.datetime.strptime(date, "%Y%m%d%H%M%S")))
+                array.append(datearraycounter)
+                array.append(date)
+                datearray.append(array)
+                datearraycounter = datearraycounter + 1
+                print(date)
+                print(str(datetime.datetime.strptime(date, "%Y%m%d%H%M%S")))
+            vms = collection.find({"datetime": max(col_datetimes)})
+            col_datetime_human = datetime.datetime.strptime(max(col_datetimes), "%Y%m%d%H%M%S")
+        except ValueError as err:
+            print(err)
+        for vm in vms:
+            if vm.get("vmname"):
+                # print(vm.get("vmname"))
+                if vm.get("rgname"):
+                    # print(vm.get("rgname"))
+                    if vm.get("disk"):
+                        # print(vm.get("disk"))
+                        if vm.get("disk").get("os").get("tags") is not None:
+                            print(vm.get("rgname") + "/" + vm.get("vmname") + " os disk " + str(vm.get("disk").get("os").get("tags")))
+                        else:
+                            print(vm.get("rgname") + "/" + vm.get("vmname") + " cannot get os disk tags")
+                        for datadisk in vm.get("disk").get("data"):
+                            if datadisk.get("tags") is not None:
+                                print(vm.get("rgname") + "/" + vm.get("vmname") + " data disk " + str(datadisk.get("tags")))
+                            else:
+                                print(vm.get("rgname") + "/" + vm.get("vmname") + " cannot get data disk tags")
+                    else:
+                        print(vm.get("rgname") + "/" + vm.get("vmname") + " cannot get disk" )
+                else:
+                    print(vm.get("rgname") + "/" + vm.get("vmname") + " Cannot get rgname")
+            else:
+                print(vm.get("rgname") + "/" + vm.get("vmname") + " cannot get vmmname")
+
+
+    def getdatafrombase(self, server, base, collection, timefilter="last"):
+        client = MongoClient(server)
+        db = client[base]
+        collection = db[collection]
+        try:
+            col_datetimes = collection.find().distinct("datetime")
+            datearray = []
+            datearraycounter = 1
+            for date in col_datetimes:
+                array = []
+                array.append(str(datetime.datetime.strptime(date, "%Y%m%d%H%M%S")))
+                array.append(datearraycounter)
+                array.append(date)
+                datearray.append(array)
+                datearraycounter = datearraycounter + 1
+                print(date)
+                print(str(datetime.datetime.strptime(date, "%Y%m%d%H%M%S")))
+
+            if timefilter == "last":
+                print("last")
+                # vms = collection.find({"state": {"$ne": "PowerState/running"}, "datetime": max(col_datetimes)})
+                vms = collection.find({"datetime": max(col_datetimes)})
+                col_datetime_human = datetime.datetime.strptime(max(col_datetimes), "%Y%m%d%H%M%S")
+
+
+            else:
+                print(timefilter)
+                col_datetime_human = datetime.datetime.strptime(timefilter, "%Y%m%d%H%M%S")
+                vms = collection.find({"datetime": timefilter, "state": {"$ne": "PowerState/running"}})
+                # vms = collection.find({"datetime": timefilter})
+                # datearray = False
+                # col_datetime = collection.distinct("datetime")
+                # return False
+        except ValueError as err:
+            print(err)
+        for vm in vms:
+            print(vm)
+        # return  False
 if __name__ == '__main__':
     class main:
         cloud = CloudSave()
@@ -142,4 +148,6 @@ if __name__ == '__main__':
             cloud.collectVmsFromAzure()
             print(cloud.now)
         if args.tags is not None and args.tags:
-            cloud.updateDisksTags
+            # cloud.getdatafrombase(mongoserver, mongodb, "vms")
+            cloud.updateDisksTags(mongoserver, mongodb, "vms")
+            # cloud.updateDisksTags

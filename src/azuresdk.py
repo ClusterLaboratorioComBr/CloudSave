@@ -52,117 +52,6 @@ class AzureSdk:
             for vm in self.getVmList(rg):
                 array.append({"vmname": vm, "rgname": rg})
         return array
-
-    # def getVmDetail(self, vmname, rgname, datetime):
-    #     print(rgname + "/" + vmname)
-    #     try:
-    #         vm = self.compute_client.virtual_machines.get(resource_group_name=rgname, vm_name=vmname)
-    #     except CloudError as err:
-    #         print("Fail to get virtual machine details")
-    #         print(err)
-    #         return False
-    #     try:
-    #         vmi = self.compute_client.virtual_machines.instance_view(resource_group_name=rgname, vm_name=vmname)
-    #     except CloudError as err:
-    #         print("Fail to get virtual machine instance")
-    #         print(err)
-    #         return False
-    #     for interface in vm.network_profile.network_interfaces:
-    #         name = " ".join(interface.id.split('/')[-1:])
-    #         sub = "".join(interface.id.split('/')[4])
-    #         vmnet = self.network_client.network_interfaces.get(sub, name)
-    #         for ip in vmnet.ip_configurations:
-    #             nicip = ip.private_ip_address
-    #             nicvnet = str(ip.subnet.id.split('/')[8])
-    #             nicsubnet = str(ip.subnet.id.split('/')[10])
-    #             nicname = vmnet.name
-    #             nicmac = vmnet.mac_address
-    #             if vmnet.network_security_group is not None:
-    #                 nicnsg = vmnet.network_security_group.id
-    #             else:
-    #                 nicnsg = vmnet.network_security_group
-    #             niclocation = vmnet.location
-    #             nicpublic = ip.public_ip_address
-    #     location = vm.location
-    #     size = vm.hardware_profile.vm_size
-    #     if vm.availability_set is not None:
-    #         avset = vm.availability_set.id
-    #     else:
-    #         avset = vm.availability_set
-    #     state = vmi.statuses[1].code
-    #     statetime = vmi.statuses[0].time
-    #     if vm.storage_profile.image_reference is not None:
-    #         vmimage = vm.storage_profile.image_reference.id
-    #     else:
-    #         vmimage = None
-    #     osdiskname = vm.storage_profile.os_disk.name
-    #     osdisksize = vm.storage_profile.os_disk.disk_size_gb
-    #     osdiskcache = vm.storage_profile.os_disk.caching
-    #     if vm.storage_profile.os_disk.managed_disk is not None:
-    #         osdisktype = vm.storage_profile.os_disk.managed_disk.storage_account_type
-    #         datadisks = []
-    #         for datadisk in vm.storage_profile.data_disks:
-    #             datadisks.append({
-    #                 "name": datadisk.name,
-    #                 "size": datadisk.disk_size_gb,
-    #                 "type": datadisk.managed_disk.storage_account_type,
-    #                 "cache": datadisk.caching,
-    #                 "lun": datadisk.lun
-    #             })
-    #     else:
-    #         osdisktype = "windows"
-    #         # osdisktype=vm.storage_profile.os_disk.managed_disk
-    #         datadisks = []
-    #         for datadisk in vm.storage_profile.data_disks:
-    #             datadisks.append({
-    #                 "name": datadisk.name,
-    #                 "size": datadisk.disk_size_gb,
-    #                 "type": "windows",
-    #                 # "type": datadisk.managed_disk.storage_account_type,
-    #                 "cache": datadisk.caching,
-    #                 "lun": datadisk.lun
-    #             })
-    #
-    #     network = {
-    #         "name": nicname,
-    #         "subnet": nicsubnet,
-    #         "ip": nicip,
-    #         "vnet": nicvnet,
-    #         "location": niclocation,
-    #         "public": nicpublic,
-    #         "mac": nicmac,
-    #         "sg": nicnsg
-    #     }
-    #     disk = {
-    #         "os": {
-    #             "name": osdiskname,
-    #             "size": osdisksize,
-    #             "type": osdisktype,
-    #             "cache": osdiskcache
-    #             # TODO Add the disks tags from the cloud
-    #         },
-    #         "data": datadisks
-    #     }
-    #     if vm.tags is not None:
-    #         tags = vm.tags
-    #     else:
-    #         tags = ""
-    #     data = {
-    #         "vmname": vmname,
-    #         "rgname": rgname,
-    #         "location": location,
-    #         "size": size,
-    #         "avset": avset,
-    #         "state": state,
-    #         "statetime": statetime,
-    #         "vmimage": vmimage,
-    #         "network": network,
-    #         "disk": disk,
-    #         "tags": tags,
-    #         "datetime": datetime
-    #     }
-    #     print(data)
-    #     return data
     def getresourcedetail(self,resourceid):
         resources = self.resource_client.resources.list()
         for resource in resources:
@@ -259,11 +148,11 @@ class AzureSdk:
             if self.getresourcedetail(vm.storage_profile.os_disk.managed_disk.id).tags is not None:
                 osdisktags = self.getresourcedetail(vm.storage_profile.os_disk.managed_disk.id).tags
             else:
-                osdisktags = None
-                osdiskid = None
+                osdisktags = ""
+                osdiskid = ""
         else:
-            osdisktags = None
-            osdiskid = None
+            osdisktags = ""
+            osdiskid = ""
         if vm.storage_profile.os_disk.managed_disk is not None:
             osdisktype = vm.storage_profile.os_disk.managed_disk.storage_account_type
             datadisks = []
@@ -276,19 +165,21 @@ class AzureSdk:
                     "lun": datadisk.lun,
                     "tags": self.getresourcedetail(datadisk.managed_disk.id).tags,
                     "id" : str(self.getresourcedetail(datadisk.managed_disk.id).id)
-
                 })
         else:
-            osdisktype = "windows"
+            osdisktype = "unmanaged"
             # osdisktype=vm.storage_profile.os_disk.managed_disk
             datadisks = []
             for datadisk in vm.storage_profile.data_disks:
                 # print(datadisk.vhd.uri)
+                print(datadisk)
                 datadisks.append({
                     "name": datadisk.name,
                     "size": datadisk.disk_size_gb,
-                    "type": "windows",
+                    "type": osdisktype,
                     # "type": datadisk.managed_disk.storage_account_type,
+                    # "tags": self.getresourcedetail(datadisk.managed_disk.id).tags,
+                    "tags":"",
                     "cache": datadisk.caching,
                     "lun": datadisk.lun,
                     "id" : datadisk.vhd.uri
@@ -408,25 +299,10 @@ class AzureSdk:
                 # print("console" + protected)
                 # print(protected)
         return backup_items
-    #
-    # def getComnputeUsage(self):
-    #     import azurerm
-    #     import json
-    #     access_token = azurerm.get_access_token_from_cli()
-    #     subscription_id = azurerm.get_subscription_from_cli()
-    #     location = 'westus'
-    #     compute_usage = azurerm.get_compute_usage(access_token, subscription_id, location)
-    #     print(json.dumps(compute_usage, sort_keys=False, indent=2, separators=(',', ': ')))
 
 
 class Azclass:
     def __init__(self, appid, dn, name, passwd, tenant, subscription):
-        # self.appid = config.getDados("AZ_APPID")
-        # self.dn = config.getDados("AZ_DISPLAYNAME")
-        # self.name = config.getDados("AZ_NAME")
-        # self.passwd = config.getDados("AZ_PASSWD")
-        # self.tenant = config.getDados("AZ_TENANT")
-        # self.subscription = config.getDados("AZ_SUBSCRIPTION")
         self.appid = appid
         self.dn = dn
         self.name = name
