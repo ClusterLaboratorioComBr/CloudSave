@@ -28,6 +28,7 @@ args: parser = parser.parse_args()
 class CloudSave:
     def __init__(self):
         self.now = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+
     def collectVmsFromAzureThread(self):
         print("thread Start")
         azure = azsdk(az_appid, az_dn, az_name, az_passwd, az_tenant, az_subscription)
@@ -53,9 +54,8 @@ class CloudSave:
         t.start()
         return False
 
-
     def updateDisksTags(self, server, base, collection):
-        timefilter = "last"
+        # timefilter = "last"
         client = MongoClient(server)
         db = client[base]
         collection = db[collection]
@@ -73,32 +73,73 @@ class CloudSave:
                 print(date)
                 print(str(datetime.datetime.strptime(date, "%Y%m%d%H%M%S")))
             vms = collection.find({"datetime": max(col_datetimes)})
-            col_datetime_human = datetime.datetime.strptime(max(col_datetimes), "%Y%m%d%H%M%S")
+            # col_datetime_human = datetime.datetime.strptime(max(col_datetimes), "%Y%m%d%H%M%S")
         except ValueError as err:
             print(err)
+        disks = []
+        disks_ok = []
+        disks_nok = []
         for vm in vms:
             if vm.get("vmname"):
-                # print(vm.get("vmname"))
                 if vm.get("rgname"):
-                    # print(vm.get("rgname"))
                     if vm.get("disk"):
-                        # print(vm.get("disk"))
-                        if vm.get("disk").get("os").get("tags") is not None:
-                            print(vm.get("rgname") + "/" + vm.get("vmname") + " os disk " + str(vm.get("disk").get("os").get("tags")))
+                        if vm.get("disk").get("os").get("type") == "unmanaged":
+                            print(vm.get("rgname") + "/" + vm.get("vmname") + " os_disk unmanaged")
                         else:
-                            print(vm.get("rgname") + "/" + vm.get("vmname") + " cannot get os disk tags")
-                        for datadisk in vm.get("disk").get("data"):
-                            if datadisk.get("tags") is not None:
-                                print(vm.get("rgname") + "/" + vm.get("vmname") + " data disk " + str(datadisk.get("tags")))
+                            if vm.get("disk").get("os").get("tags") is not None:
+                                if "billing" in vm.get("disk").get("os").get("tags"):
+                                    print(vm.get("rgname") + "/" + vm.get("vmname") + " os_disk OK")
+                                    disks_ok.append({
+                                        "vmname": vm.get("vmname"),
+                                        "rgname": vm.get("rgname"),
+                                        "vmid": vm.get("ID"),
+                                        "diskid": vm.get("disk").get("os").get("id")
+                                    })
+                                else:
+                                    print(vm.get("rgname") + "/" + vm.get("vmname") + " os_disk NOK")
+                                    disks_nok.append({
+                                        "vmname": vm.get("vmname"),
+                                        "rgname": vm.get("rgname"),
+                                        "vmid": vm.get("ID"),
+                                        "diskid": vm.get("disk").get("os").get("id")
+                                    })
                             else:
-                                print(vm.get("rgname") + "/" + vm.get("vmname") + " cannot get data disk tags")
+                                print(vm.get("rgname") + "/" + vm.get("vmname") + " os_tag None")
+                        for datadisk in vm.get("disk").get("data"):
+                            if datadisk.get("type") == "unmanaged":
+                                print(vm.get("rgname") + "/" + vm.get("vmname") + " data_disk unmanaged")
+                            else:
+                                if datadisk.get("tags") is not None:
+                                    if "billing" in datadisk.get("tags"):
+                                        print(vm.get("rgname") + "/" + vm.get("vmname") + " data_disk OK")
+                                        disks_ok.append({
+                                            "vmname": vm.get("vmname"),
+                                            "rgname": vm.get("rgname"),
+                                            "vmid": vm.get("ID"),
+                                            "diskid": datadisk.get("id")
+                                        })
+                                    else:
+                                        print(
+                                            vm.get("rgname") + "/" + vm.get("vmname") + " data_disk NOK")
+                                        disks_nok.append({
+                                            "vmname": vm.get("vmname"),
+                                            "rgname": vm.get("rgname"),
+                                            "vmid": vm.get("ID"),
+                                            "diskid": datadisk.get("id")
+                                        })
+                                else:
+                                    print(vm.get("rgname") + "/" + vm.get("vmname") + " data_tags None")
                     else:
-                        print(vm.get("rgname") + "/" + vm.get("vmname") + " cannot get disk" )
+                        print(vm.get("rgname") + "/" + vm.get("vmname") + " disk Error")
                 else:
-                    print(vm.get("rgname") + "/" + vm.get("vmname") + " Cannot get rgname")
+                    print(vm.get("rgname") + "/" + vm.get("vmname") + " rgname Error")
             else:
-                print(vm.get("rgname") + "/" + vm.get("vmname") + " cannot get vmmname")
-
+                print(vm.get("rgname") + "/" + vm.get("vmname") + " vmname Error")
+        disks.append({
+            "OK": disks_ok,
+            "NOK": disks_nok
+        })
+        print(disks)
 
     def getdatafrombase(self, server, base, collection, timefilter="last"):
         client = MongoClient(server)
@@ -138,6 +179,8 @@ class CloudSave:
         for vm in vms:
             print(vm)
         # return  False
+
+
 if __name__ == '__main__':
     class main:
         cloud = CloudSave()
