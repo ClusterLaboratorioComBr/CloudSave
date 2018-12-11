@@ -5,7 +5,7 @@ from src.azuresdk import Azclass as az
 import threading, time, os, datetime
 from src.azuresdk import AzureSdk as azsdk
 
-title = "CloudSave"
+title = "CloudSave Framework"
 az_appid = os.environ['AZ_APPID']
 az_dn = os.environ['AZ_DISPLAYNAME']
 az_name = os.environ['AZ_NAME']
