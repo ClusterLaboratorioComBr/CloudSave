@@ -55,6 +55,19 @@ class CloudSave:
         return False
 
     def updateDisksTags(self, server, base, collection):
+        azure = azsdk(az_appid, az_dn, az_name, az_passwd, az_tenant, az_subscription)
+
+        # discoid= "/subscriptions/xxxxxxxxxxxxxxxxx/resourceGroups/xxxxxxxxx/providers/Microsoft.Compute/disks/xxxxxxxxxxxxxxxxxx"
+        # tags = {
+        #         'billing':'infra-basic',
+        #         'chave':'valor'
+        # }
+        # disco = azure.getresorucedetailbyid(discoid,"disk")
+        # print(disco.tags)
+        # azure.setdisktagbyid(discoid,tags)
+        # print("life continues")
+        # return False
+
         # timefilter = "last"
         client = MongoClient(server)
         db = client[base]
@@ -76,7 +89,7 @@ class CloudSave:
             # col_datetime_human = datetime.datetime.strptime(max(col_datetimes), "%Y%m%d%H%M%S")
         except ValueError as err:
             print(err)
-        disks = []
+        # disks = []
         disks_ok = []
         disks_nok = []
         for vm in vms:
@@ -93,7 +106,9 @@ class CloudSave:
                                         "vmname": vm.get("vmname"),
                                         "rgname": vm.get("rgname"),
                                         "vmid": vm.get("ID"),
-                                        "diskid": vm.get("disk").get("os").get("id")
+                                        "diskid": vm.get("disk").get("os").get("id"),
+                                        "vmtags": vm.get("tags"),
+                                        "state": "OK"
                                     })
                                 else:
                                     print(vm.get("rgname") + "/" + vm.get("vmname") + " os_disk NOK")
@@ -101,7 +116,9 @@ class CloudSave:
                                         "vmname": vm.get("vmname"),
                                         "rgname": vm.get("rgname"),
                                         "vmid": vm.get("ID"),
-                                        "diskid": vm.get("disk").get("os").get("id")
+                                        "diskid": vm.get("disk").get("os").get("id"),
+                                        "vmtags": vm.get("tags"),
+                                        "state": "NOK"
                                     })
                             else:
                                 print(vm.get("rgname") + "/" + vm.get("vmname") + " os_tag None")
@@ -116,7 +133,9 @@ class CloudSave:
                                             "vmname": vm.get("vmname"),
                                             "rgname": vm.get("rgname"),
                                             "vmid": vm.get("ID"),
-                                            "diskid": datadisk.get("id")
+                                            "diskid": datadisk.get("id"),
+                                            "vmtags": vm.get("tags"),
+                                            "state": "OK"
                                         })
                                     else:
                                         print(
@@ -125,7 +144,9 @@ class CloudSave:
                                             "vmname": vm.get("vmname"),
                                             "rgname": vm.get("rgname"),
                                             "vmid": vm.get("ID"),
-                                            "diskid": datadisk.get("id")
+                                            "diskid": datadisk.get("id"),
+                                            "vmtags": vm.get("tags"),
+                                            "state": "NOK"
                                         })
                                 else:
                                     print(vm.get("rgname") + "/" + vm.get("vmname") + " data_tags None")
@@ -135,11 +156,23 @@ class CloudSave:
                     print(vm.get("rgname") + "/" + vm.get("vmname") + " rgname Error")
             else:
                 print(vm.get("rgname") + "/" + vm.get("vmname") + " vmname Error")
-        disks.append({
+        disks = {
             "OK": disks_ok,
             "NOK": disks_nok
-        })
-        print(disks)
+        }
+        print("End of the comparison")
+        for disk in disks["NOK"]:
+            #azure.setdisktagbyid(discoid,tags)
+            if disk["diskid"] == "" or disk["diskid"] == None:
+                print("no DISKID" + str(disk["diskid"]))
+            else:
+                print(disk["diskid"])
+                if disk["vmtags"] == "" or disk["vmtags"] == None:
+                    print("no TAGS" + str(disk["vmtags"]))
+                else:
+                    print(disk["vmtags"])
+                    # azure.setdisktagbyid(disk["diskid"], disk["vmtags"])
+
 
     def getdatafrombase(self, server, base, collection, timefilter="last"):
         client = MongoClient(server)

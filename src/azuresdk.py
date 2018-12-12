@@ -69,6 +69,18 @@ class AzureSdk:
         if type == "vm":
             return self.resource_client.resources.get_by_id(resourceid, "2018-10-01")
             # print(resource)
+    def setdisktagbyid(self,diskid,tags):
+        #https://github.com/Azure-Samples/resource-manager-python-resources-and-groups/blob/master/README.md#update-group
+        # self.resource_client.resources.create_or_update_by_id(diskid,"2018-09-30",)
+        try:
+            retorno = self.resource_client.resources.update_by_id(diskid,"2018-09-30",{"tags":tags})
+            print(retorno)
+        except ValueError as err:
+            print("could not update tags " + err)
+        except CloudError as err:
+            print("Could not update disk tags " + str(err))
+        return False
+
     def getvmid(self,vmname,rgname):
         vmid = self.compute_client.virtual_machines.get(rgname,vmname)
         return str(vmid.id)
