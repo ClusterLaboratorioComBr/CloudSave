@@ -101,7 +101,7 @@ class CloudSave:
                         else:
                             if vm.get("disk").get("os").get("tags") is not None:
                                 if "billing" in vm.get("disk").get("os").get("tags"):
-                                    print(vm.get("rgname") + "/" + vm.get("vmname") + " os_disk OK")
+                                    # print(vm.get("rgname") + "/" + vm.get("vmname") + " os_disk OK")
                                     disks_ok.append({
                                         "vmname": vm.get("vmname"),
                                         "rgname": vm.get("rgname"),
@@ -111,7 +111,7 @@ class CloudSave:
                                         "state": "OK"
                                     })
                                 else:
-                                    print(vm.get("rgname") + "/" + vm.get("vmname") + " os_disk NOK")
+                                    # print(vm.get("rgname") + "/" + vm.get("vmname") + " os_disk NOK")
                                     disks_nok.append({
                                         "vmname": vm.get("vmname"),
                                         "rgname": vm.get("rgname"),
@@ -128,7 +128,7 @@ class CloudSave:
                             else:
                                 if datadisk.get("tags") is not None:
                                     if "billing" in datadisk.get("tags"):
-                                        print(vm.get("rgname") + "/" + vm.get("vmname") + " data_disk OK")
+                                        # print(vm.get("rgname") + "/" + vm.get("vmname") + " data_disk OK")
                                         disks_ok.append({
                                             "vmname": vm.get("vmname"),
                                             "rgname": vm.get("rgname"),
@@ -138,8 +138,7 @@ class CloudSave:
                                             "state": "OK"
                                         })
                                     else:
-                                        print(
-                                            vm.get("rgname") + "/" + vm.get("vmname") + " data_disk NOK")
+                                        # print(vm.get("rgname") + "/" + vm.get("vmname") + " data_disk NOK")
                                         disks_nok.append({
                                             "vmname": vm.get("vmname"),
                                             "rgname": vm.get("rgname"),
@@ -162,16 +161,22 @@ class CloudSave:
         }
         print("End of the comparison")
         for disk in disks["NOK"]:
-            #azure.setdisktagbyid(discoid,tags)
+            # print(disk)
             if disk["diskid"] == "" or disk["diskid"] == None:
                 print("no DISKID" + str(disk["diskid"]))
             else:
-                print(disk["diskid"])
-                if disk["vmtags"] == "" or disk["vmtags"] == None:
+                # print(disk["diskid"])
+                if disk["vmtags"] == "" or disk["vmtags"] == None or disk["vmtags"] == {}:
                     print("no TAGS" + str(disk["vmtags"]))
                 else:
-                    print(disk["vmtags"])
+                    # print(disk["vmtags"])
                     # azure.setdisktagbyid(disk["diskid"], disk["vmtags"])
+                    tags = ""
+                    for tag in list(disk["vmtags"].keys()):
+                        tags=tag + "=\"" + disk["vmtags"][tag] + "\" " + tags
+                    print("az resource tag --tags " + tags + " --id " + disk["diskid"])
+            # break
+
 
 
     def getdatafrombase(self, server, base, collection, timefilter="last"):
